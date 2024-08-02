@@ -4,13 +4,13 @@ import customtkinter as ctk
 from tkinter import messagebox
 
 class App_pt2(ctk.CTk):
-    def __init__(self):
+    def __init__(self, usuario):
         super().__init__()
         self.tema()
         self.tela_principal()
-        self.tela_usuario()
-         
-        
+        self.tela_usuario(usuario)
+
+
     def tema(self):
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("green")
@@ -18,21 +18,22 @@ class App_pt2(ctk.CTk):
     def tela_principal(self):
         self.geometry("900x500")
         self.title("MedicineOrganizer")
-        self.iconbitmap("icon.ico") 
+        #self.iconbitmap("icon.ico") 
         self.resizable(False, False)   
 
 
 # TELA PRINCIPAL
-    def tela_usuario(self):
+    def tela_usuario(self, usuario):
 
         self.opcoes_frame = ctk.CTkFrame(self, width=250, height=490)
         self.opcoes_frame.pack(side = LEFT)
 
         self.img = PhotoImage(file = "usuario.png")
         self.imagem = Label(self.opcoes_frame, image = self.img, width=150, height=150)
+        self.imagem['image'] = self.img
         self.imagem.place(x=47, y=5)
 
-        self.usuario_de_login = ctk.CTkLabel(self.opcoes_frame, text= "Usuario", font = ("Roboto", 14))
+        self.usuario_de_login = ctk.CTkLabel(self.opcoes_frame, text= usuario, font = ("Roboto", 14))
         self.usuario_de_login.place(x=100, y=160)
 
         self.pacientes_entry = ctk.CTkButton(self.opcoes_frame, text = "Pacientes".upper(), font = ("Roboto", 18), width = 180, fg_color = "Gray", hover_color = "#202020", corner_radius = 15, command = self.click_pacientes)
