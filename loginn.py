@@ -16,26 +16,26 @@ class BackEnd():
 
     def cria_tabela(self):
         self.conecta_db()
-        
+
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS Usuarios(
             Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             Username TEXT NOT NULL,
-            CPF TEXT NOT NULL,           
+            CPF TEXT NOT NULL,
             Password TEXT NOT NULL,
-            ConfPassword TEXT NOT NULL           
+            ConfPassword TEXT NOT NULL
             );
         """)
 
         self.conn.commit()
-        print("Tabela criada com sucesso!")  
-        self.desconecta_db() 
+        print("Tabela criada com sucesso!")
+        self.desconecta_db()
 
     def cadastrar_usuario(self):
         self.username_cadastro = self.novo_usuario.get()
-        self.cpf_cadastro = self.novo_cpf.get() 
-        self.senha_cadastro = self.nova_senha.get() 
-        self.confirme_senha_cadastro = self.confirmar_senha.get()  
+        self.cpf_cadastro = self.novo_cpf.get()
+        self.senha_cadastro = self.nova_senha.get()
+        self.confirme_senha_cadastro = self.confirmar_senha.get()
 
         self.conecta_db()
 
@@ -74,7 +74,8 @@ class BackEnd():
         try:
             if(self.username_login in self.verifica_dados and self.senha_login in self.verifica_dados):
                messagebox.showinfo(title = "MedicineOrganizer", message = f"Parabens {self.username_login}\nLogin feito com secesso!")
-               self.login_frame.pack_forget()
+               #self.login_frame.pack_forget()
+               self.login_frame.destroy()
 
                self.tela_frame = ctk.CTkFrame(self)
                self.tela_frame.pack()
@@ -96,8 +97,8 @@ class App(ctk.CTk, BackEnd):
         self.tela()
         self.tela_login() 
         self.cria_tabela()
-         
-        
+
+
     def tema(self):
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("green")
@@ -105,8 +106,8 @@ class App(ctk.CTk, BackEnd):
     def tela(self):
         self.geometry("600x400")
         self.title("MedicineOrganizer")
-        self.iconbitmap("icon.ico") 
-        self.resizable(False, False)   
+        #self.iconbitmap("icon.ico")
+        self.resizable(False, False)
 
 
 # TELA PRINCIPAL
