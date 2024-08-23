@@ -107,26 +107,10 @@ class App_pt2(ctk.CTk):
         self.delet_data_nasci.place(x=110, y=150)
 
         self.delet_button_paciente = ctk.CTkButton(self.delet_frame, width = 250, text = "deletar paciente".upper(), fg_color = "Green", hover_color = "#014B05", corner_radius = 15)
-        self.delet_button_paciente.place(x=185, y=200)
-
-
-
-
-
-
-    
-
-        
-
-
-
-
-
-
-        
+        self.delet_button_paciente.place(x=185, y=200)     
 
 
 
 if __name__ == "__main__":
-    app = App_pt2()
+    app = App_pt2("eu")
     app.mainloop()

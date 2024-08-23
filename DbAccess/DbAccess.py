@@ -5,7 +5,7 @@ import psycopg2
 class DbAccess():
 
     def Conectar(self):
-        self.connection = psycopg2.connect( dbname="medicineorganizer", user="postgres", password="", host="localhost", port="5432" )
+        self.connection = psycopg2.connect( dbname="medicineorganizer", user="postgres", password="558922", host="localhost", port="5432" )
         self.cursor = self.connection.cursor()
 
 
@@ -27,3 +27,25 @@ class DbAccess():
         self.Desconectar()
 
         return ( True )
+    
+    def CriarLogin(self, DadosUsuario):
+
+        usuario = DadosUsuario[0]
+        senha = DadosUsuario[1]
+
+        self.Conectar()
+        Consultar= f"select * from usuario where usuario = '{usuario}' and senha = '{senha}'"
+        self.cursor.execute(Consultar)
+
+        QuantiRegistros= len(self.cursor.fetchall()) 
+        
+        if QuantiRegistros == 0:
+            LoginSucesso = False
+        else:
+            LoginSucesso = True
+
+        return LoginSucesso
+    
+        
+
+    
