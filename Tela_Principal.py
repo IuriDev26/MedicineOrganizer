@@ -128,5 +128,5 @@ class App_pt2(ctk.CTk):
 
 
 if __name__ == "__main__":
-    app = App_pt2()
+    app = App_pt2("Diego")
     app.mainloop()
