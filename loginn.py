@@ -155,8 +155,12 @@ class App(ctk.CTk):
 
         usuario = self.nome_entry.get()
         senha   = self.senha_entry.get()
+        
+        acesso = []
+        acesso.append(usuario)
+        acesso.append(senha)
+        LoginSucesso = self.DbAccess.CriarLogin(acesso)
 
-        LoginSucesso = self.backend.verifica_login(usuario, senha)
 
         if LoginSucesso:
 
