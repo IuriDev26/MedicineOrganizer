@@ -66,6 +66,24 @@ class DbAccess():
         self.cursor.execute(query)
         self.connection.commit()
         self.Desconectar()
+    
+    def GetPacientes(self):
+
+        pacientes = []
+
+        query = f"SELECT * FROM PACIENTE"
+
+        self.Conectar()
+        self.cursor.execute(query)
+
+        pacientesDatabase = self.cursor.fetchall()
+
+        for paciente in pacientesDatabase:
+
+            pacientes.append( paciente[1] + " - " +  paciente[0] )
+        
+        return pacientes
+
 
     
         

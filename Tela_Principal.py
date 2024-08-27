@@ -45,7 +45,7 @@ class App_pt2(ctk.CTk):
                                                 command=self.click_medicamentos)
         self.medicamentos_entry.place(x=33, y=280)
 
-        self.horarios_entry = ctk.CTkButton(self.opcoes_frame, text = "Horários".upper(), font = ("Roboto", 18), width = 180, fg_color = "Gray", hover_color = "#202020", corner_radius = 15)
+        self.horarios_entry = ctk.CTkButton(self.opcoes_frame, text = "Agendamentos".upper(), font = ("Roboto", 18), width = 180, fg_color = "Gray", hover_color = "#202020", corner_radius = 15, command=self.click_agendamentos)
         self.horarios_entry.place(x=33, y=330)
 
     def click_pacientes(self):
@@ -163,6 +163,18 @@ class App_pt2(ctk.CTk):
         self.DbAccess.CriarMedicamento(medicamento)
 
         messagebox.showinfo( title="Sucesso", message="Medicamento adicionado com sucesso" )
+
+    def click_agendamentos(self, ):
+
+        self.agendamentos_frame = ctk.CTkFrame(self, width=610, height=60)
+        self.agendamentos_frame.place(x=270, y= 5)
+
+        pacientesCadastrados = self.DbAccess.GetPacientes()
+
+        pacientes = ctk.CTkComboBox(self.agendamentos_frame, values=pacientesCadastrados, hover=True, variable="pacienteEscolhido")
+        pacientes.place( x=0, y=0 )
+
+        
 
          
 
