@@ -24,7 +24,7 @@ class App(ctk.CTk):
     def tela(self):
         self.geometry("600x400")
         self.title("MedicineOrganizer")
-        #self.iconbitmap("icon.ico")
+        self.iconbitmap("icon.ico")
         self.resizable(False, False)
 
 

@@ -2,7 +2,7 @@ from tkinter import *
 from typing import Tuple
 import customtkinter as ctk
 from tkinter import messagebox
-from DbAccess.DbAccess import *
+from DbAccess.DbAccess import DbAccess
 
 class App_pt2(ctk.CTk):
     def __init__(self, usuario):
