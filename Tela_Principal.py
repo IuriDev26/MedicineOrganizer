@@ -1,3 +1,4 @@
+from PIL import Image as Imagemtesteiuri
 from tkinter import *
 from typing import Tuple
 import customtkinter as ctk
@@ -164,16 +165,63 @@ class App_pt2(ctk.CTk):
 
         messagebox.showinfo( title="Sucesso", message="Medicamento adicionado com sucesso" )
 
-    def click_agendamentos(self, ):
+    def click_agendamentos(self):
 
         self.agendamentos_frame = ctk.CTkFrame(self, width=610, height=60)
-        self.agendamentos_frame.place(x=270, y= 5)
+        self.agendamentos_frame.place(x=270, y=5)
 
+        self.cadastrar_agendamento_entry = ctk.CTkButton(self.agendamentos_frame, text= "Novo Agendamento".upper(), font = ("Roboto", 14), width = 180, fg_color = "#202020", hover_color = "Gray", corner_radius = 1, command = self.novo_agendamento)
+        self.cadastrar_agendamento_entry.place(x=40, y=15)
+
+        self.agendamentos_ativos_entry = ctk.CTkButton(self.agendamentos_frame, text= "Agendamentos Ativos".upper(), font = ("Roboto", 14), width = 180, fg_color = "#202020", hover_color = "Gray", corner_radius = 1,command = self.pacientes_ativos)
+        self.agendamentos_ativos_entry.place(x=209, y=15)
+
+        self.deletar_agendamentos_entry = ctk.CTkButton(self.agendamentos_frame, text= "deletar Agendamentos".upper(), font = ("Roboto", 14), width = 180, fg_color = "#202020", hover_color = "Gray", corner_radius = 1, command = self.delet_paciente)
+        self.deletar_agendamentos_entry.place(x=390, y=15)        
+
+        
+
+    def novo_agendamento(self):
+
+        self.registro_agendamento = ctk.CTkFrame(self, width=610, height=415)
+        self.registro_agendamento.place(x=270, y= 80)
+
+        self.novo_agendamento_frame = ctk.CTkLabel(self.registro_agendamento, text= "novo paciente".upper(), font = ("Roboto", 18))
+        self.novo_agendamento_frame.place(x=240, y=25)
+
+        self.span2 = ctk.CTkLabel(self.registro_agendamento, text= "Por favor preencha todos os campos".upper(), font = ("Roboto", 12))
+        self.span2.place(x=190, y=60)
+        
         pacientesCadastrados = self.DbAccess.GetPacientes()
+        
+        search_image = ctk.CTkImage( dark_image=Imagemtesteiuri.open("Resources/Images/lupa.png") )
+    
+        buscar_paciente = ctk.CTkButton( self.registro_agendamento, width=5, corner_radius=15, image=search_image, text='', fg_color="#2b2b2b", hover=False )
+        buscar_paciente.place(x=500, y=120)
 
-        pacientes = ctk.CTkComboBox(self.agendamentos_frame, values=pacientesCadastrados, hover=True, variable="pacienteEscolhido")
-        pacientes.place( x=0, y=0 )
+        buscar_remedio = ctk.CTkButton( self.registro_agendamento, width=5, corner_radius=15, image=search_image, text='', fg_color="#2b2b2b", hover=False )
+        buscar_remedio.place(x=500, y=170)
 
+        cpf = ctk.CTkEntry( self.registro_agendamento, width=160, font=("Roboto", 14), corner_radius=15 )
+        cpf.configure(state="disabled" )
+        cpf.place( x=105, y=120 )
+        
+        nome_paciente = ctk.CTkEntry( self.registro_agendamento, width=230, font=("Roboto", 14), corner_radius=15 )
+        nome_paciente.configure(state="disabled" )
+        nome_paciente.place( x=275, y=120 )
+
+        codigo_remedio = ctk.CTkEntry( self.registro_agendamento, width=160, font=("Roboto", 14), corner_radius=15 )
+        codigo_remedio.configure(state="disabled" )
+        codigo_remedio.place( x=105, y=170 )
+
+        remedio = ctk.CTkEntry( self.registro_agendamento, width=230, font=("Roboto", 14), corner_radius=15 )
+        remedio.configure(state="disabled" )
+        remedio.place( x=275, y=170 )
+        
+
+        
+
+        
         
 
          

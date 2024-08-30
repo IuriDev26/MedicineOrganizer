@@ -83,6 +83,21 @@ class DbAccess():
             pacientes.append( paciente[1] + " - " +  paciente[0] )
         
         return pacientes
+    
+    def GetRemedios(self):
+
+        remedios = []
+
+        query = "SELECT * FROM REMEDIO"
+
+        self.Conectar()
+        self.cursor.execute(query)
+
+        remediosDatabase = self.cursos.fetchall()
+
+        for remedio in remediosDatabase:
+
+            remedios.append( [  ] )
 
 
     
