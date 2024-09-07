@@ -5,7 +5,7 @@ import psycopg2
 class DbAccess():
 
     def Conectar(self):
-        self.connection = psycopg2.connect( dbname="medicineorganizer", user="postgres", password="Iuricrbtyuio123@#", host="localhost", port="5432" )
+        self.connection = psycopg2.connect( dbname="medicineorganizer", user="postgres", password="558922", host="localhost", port="5432" )
         self.cursor = self.connection.cursor()
 
 
