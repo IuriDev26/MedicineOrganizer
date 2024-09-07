@@ -1,8 +1,10 @@
+from PIL import Image as Imagemtesteiuri
 from tkinter import *
 from typing import Tuple
 import customtkinter as ctk
 from tkinter import messagebox
 from DbAccess.DbAccess import DbAccess
+from tkinter import ttk
 
 class App_pt2(ctk.CTk):
     def __init__(self, usuario):
@@ -12,7 +14,6 @@ class App_pt2(ctk.CTk):
         self.tela_usuario(usuario)
         self.DbAccess = DbAccess() 
 
-
     def tema(self):
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("green")
@@ -20,7 +21,7 @@ class App_pt2(ctk.CTk):
     def tela_principal(self):
         self.geometry("900x500")
         self.title("MedicineOrganizer")
-        #self.iconbitmap("icon.ico") 
+        self.iconbitmap("icon.ico") 
         self.resizable(False, False)   
 
 
@@ -53,14 +54,11 @@ class App_pt2(ctk.CTk):
         self.pacientes_frame = ctk.CTkFrame(self, width=610, height=60)
         self.pacientes_frame.place(x=270, y= 5)
 
-        self.cadastrar_pacientes_entry = ctk.CTkButton(self.pacientes_frame, text= "cadastrar paciente".upper(), font = ("Roboto", 14), width = 180, fg_color = "#202020", hover_color = "Gray", corner_radius = 1, command = self.novo_paciente)
-        self.cadastrar_pacientes_entry.place(x=40, y=15)
+        self.cadastrar_pacientes_entry = ctk.CTkButton(self.pacientes_frame, text= "cadastrar paciente".upper(), font = ("Roboto", 14), width = 200, fg_color = "#202020", hover_color = "Gray", corner_radius = 5, command = self.novo_paciente)
+        self.cadastrar_pacientes_entry.place(x=100, y=15)
 
-        self.pacientes_ativos_entry = ctk.CTkButton(self.pacientes_frame, text= "Pacientes Ativos".upper(), font = ("Roboto", 14), width = 180, fg_color = "#202020", hover_color = "Gray", corner_radius = 1,command = self.pacientes_ativos)
-        self.pacientes_ativos_entry.place(x=215, y=15)
-
-        self.deletar_pacientes_entry = ctk.CTkButton(self.pacientes_frame, text= "deletar pacientes".upper(), font = ("Roboto", 14), width = 180, fg_color = "#202020", hover_color = "Gray", corner_radius = 1, command = self.delet_paciente)
-        self.deletar_pacientes_entry.place(x=390, y=15)
+        self.pacientes_ativos_entry = ctk.CTkButton(self.pacientes_frame, text= "Pacientes Ativos".upper(), font = ("Roboto", 14), width = 200, fg_color = "#202020", hover_color = "Gray", corner_radius = 5,command = self.pacientes_ativos)
+        self.pacientes_ativos_entry.place(x=320, y=15)
 
     def novo_paciente(self):
 
@@ -86,31 +84,50 @@ class App_pt2(ctk.CTk):
         self.save_button_paciente = ctk.CTkButton(self.registro_paciente, width = 250, text = "Cadastrar paciente".upper(), fg_color = "Green", hover_color = "#014B05", corner_radius = 15, command=self.criar_paciente_banco)
         self.save_button_paciente.place(x=185, y=250)
 
-    
+    def excluir_paciente(self):
+        selected_item = self.pacientes_at.selection()  # Seleciona o item
+        if selected_item:  # Verifica se há um item selecionado
+            self.pacientes_at.delete(selected_item)  # Exclui o item
+   
     def pacientes_ativos(self): 
 
+        self.registro_paciente.place_forget()
 
         self.paciente_ativo_frame = ctk.CTkFrame(self, width=610, height=415)
         self.paciente_ativo_frame.place(x=270, y= 80)
+        
+        style = ttk.Style()
+        style.theme_use("default")
+        style.configure("Custom.Treeview", 
+                background="#202020",  # Cor de fundo
+                foreground="white",    # Cor do texto
+                rowheight=25,          # Altura das linhas
+                fieldbackground="#202020")  # Cor de fundo do campo
+                
+        self.pacientes_at = ttk.Treeview(self.paciente_ativo_frame, columns=("cpf", "datanascimento", "nome"), show="headings", style="Custom.Treeview")
+        self.pacientes_at.pack(fill="both", expand=True)
 
-    
-    def delet_paciente(self): 
+        # Definir os cabeçalhos das colunas
+        self.pacientes_at.heading("cpf", text="CPF")
+        self.pacientes_at.heading("datanascimento", text="Data Nascimento")
+        self.pacientes_at.heading("nome", text="Nome")
+        
+        # Definir o tamanho das colunas
+        self.pacientes_at.column("cpf", anchor="center", width=150)
+        self.pacientes_at.column("datanascimento", anchor="center", width=150)
+        self.pacientes_at.column("nome", anchor="center", width=308)
+        
+        # Adicionar dados à tabela
+        dados = [
+        (24234567888, "25/12/2000", "Alice"),
+        (12345678900, "25/12/2000", "Bruno"),
+        (55577788834, "25/12/2000", "Joao"),
+        ]
+        for cpf, datanascimento, nome, in dados:
+            self.pacientes_at.insert("", "end", values=(cpf, datanascimento, nome, "Excluir"))
 
-
-        self.delet_frame = ctk.CTkFrame(self, width=610, height=415)
-        self.delet_frame.place(x=270, y= 80)
-
-        self.span3 = ctk.CTkLabel(self.delet_frame, text= "Por favor digite uma das opcões abaixo para deletar".upper(), font = ("Roboto", 12))
-        self.span3.place(x=140, y=60)
-            
-        self.delet_cpf = ctk.CTkEntry(self.delet_frame, width=400, placeholder_text = "CPF".upper(), corner_radius = 15)
-        self.delet_cpf.place(x=110, y=100)
-
-        self.delet_data_nasci = ctk.CTkEntry(self.delet_frame, width=400, placeholder_text = "Data de nascimento".upper(), corner_radius = 15)
-        self.delet_data_nasci.place(x=110, y=150)
-
-        self.delet_button_paciente = ctk.CTkButton(self.delet_frame, width = 250, text = "deletar paciente".upper(), fg_color = "Green", hover_color = "#014B05", corner_radius = 15)
-        self.delet_button_paciente.place(x=185, y=200)    
+        delet_paciente_ativo = ctk.CTkButton(self.paciente_ativo_frame, text = "deletar paciente selecionado".upper(), fg_color = "Green", hover_color = "#014B05", corner_radius = 15, command= self.excluir_paciente)
+        delet_paciente_ativo.pack()    
 
     def criar_paciente_banco(self):
 
@@ -128,33 +145,70 @@ class App_pt2(ctk.CTk):
         self.medicamentos_frame = ctk.CTkFrame(self, width=610, height=60)
         self.medicamentos_frame.place(x=270, y= 5)
 
-        self.cadastrar_medicamento_entry = ctk.CTkButton(self.medicamentos_frame, text= "cadastrar medicamento".upper(), font = ("Roboto", 14), width = 180, fg_color = "#202020", hover_color = "Gray", corner_radius = 1, command = self.novo_medicamento)
-        self.cadastrar_medicamento_entry.place(x=40, y=15)
+        self.cadastrar_medicamento_entry = ctk.CTkButton(self.medicamentos_frame, text= "cadastrar medicamento".upper(), font = ("Roboto", 14), width = 200, fg_color = "#202020", hover_color = "Gray", corner_radius = 5, command = self.novo_medicamento)
+        self.cadastrar_medicamento_entry.place(x=100, y=15)
 
-        self.deletar_medicamento_entry = ctk.CTkButton(self.medicamentos_frame, text= "deletar medicamento".upper(), font = ("Roboto", 14), width = 180, fg_color = "#202020", hover_color = "Gray", corner_radius = 1, command = self.delet_medicamento)
-        self.deletar_medicamento_entry.place(x=390, y=15)
+        self.deletar_medicamento_entry = ctk.CTkButton(self.medicamentos_frame, text= "medicamentos ativos".upper(), font = ("Roboto", 14), width = 200, fg_color = "#202020", hover_color = "Gray", corner_radius = 5, command = self.medicamento_ativos)
+        self.deletar_medicamento_entry.place(x=320, y=15)
 
-    
     def novo_medicamento(self):
 
         self.registro_medicamento = ctk.CTkFrame(self, width=610, height=415)
         self.registro_medicamento.place(x=270, y= 80)
 
         self.novo_medicamento_frame = ctk.CTkLabel(self.registro_medicamento, text= "novo medicamento".upper(), font = ("Roboto", 18))
-        self.novo_medicamento_frame.place(x=240, y=25)
-
-        self.span_medicamento = ctk.CTkLabel(self.registro_medicamento, text= "Por favor preencha todos os campos".upper(), font = ("Roboto", 12))
-        self.span_medicamento.place(x=190, y=60)
+        self.novo_medicamento_frame.place(x=220, y=25)
             
         self.nome_medicamento = ctk.CTkEntry(self.registro_medicamento, width=400, placeholder_text = "Nome do Medicamento".upper(), corner_radius = 15)
         self.nome_medicamento.place(x=110, y=100)
 
         self.save_button_medicamento = ctk.CTkButton(self.registro_medicamento, width = 250, text = "Cadastrar medicamento".upper(), fg_color = "Green", hover_color = "#014B05", corner_radius = 15, command=self.criar_medicamento_banco)
-        self.save_button_medicamento.place(x=185, y=250)
+        self.save_button_medicamento.place(x=185, y=160)
 
-    def delet_medicamento(self):
+    def medicamento_ativos(self):
 
-        pass
+        self.registro_medicamento.place_forget()
+
+        self.delet_medicamento_frame = ctk.CTkFrame(self, width=610, height=415)
+        self.delet_medicamento_frame.place(x=270, y= 80)
+        
+        style = ttk.Style()
+        style.theme_use("default")
+        style.configure("Custom.Treeview", 
+                background="#202020",  # Cor de fundo
+                foreground="white",    # Cor do texto
+                rowheight=25,          # Altura das linhas
+                fieldbackground="#202020")  # Cor de fundo do campo
+                
+        self.medicamento_at = ttk.Treeview(self.delet_medicamento_frame, columns=("medicamento"), show="headings", style="Custom.Treeview")
+        self.medicamento_at.pack(fill="both", expand=True)
+
+        # Definir os cabeçalhos das colunas
+        self.medicamento_at.heading("medicamento", text="Medicamentos")
+        
+        # Definir o tamanho das colunas
+        self.medicamento_at.column("medicamento", anchor="center", width=608)
+        
+        
+        # Adicionar dados à tabela
+        dados = [
+        ("tylenol",),
+        ("dipirona",),
+        ("paracetamol",),
+        ("rivotril",),
+
+        ]
+        for medicamento, in dados:
+            self.medicamento_at.insert("", "end", values=(medicamento, "Excluir"))
+
+        delet_medicamento_at = ctk.CTkButton(self.delet_medicamento_frame, text = "deletar medicamento selecionado".upper(), fg_color = "Green", hover_color = "#014B05", corner_radius = 15, command= self.excluir_medicamento)
+        delet_medicamento_at.pack() 
+
+    def excluir_medicamento(self):
+        
+        selected_item = self.medicamento_at.selection()  # Seleciona o item
+        if selected_item:  # Verifica se há um item selecionado
+            self.medicamento_at.delete(selected_item)  # Exclui o item   
 
     def criar_medicamento_banco(self):
 
@@ -164,16 +218,226 @@ class App_pt2(ctk.CTk):
 
         messagebox.showinfo( title="Sucesso", message="Medicamento adicionado com sucesso" )
 
-    def click_agendamentos(self, ):
+    def click_agendamentos(self):
 
         self.agendamentos_frame = ctk.CTkFrame(self, width=610, height=60)
-        self.agendamentos_frame.place(x=270, y= 5)
+        self.agendamentos_frame.place(x=270, y=5)
 
+        self.cadastrar_agendamento_entry = ctk.CTkButton(self.agendamentos_frame, text= "Novo Agendamento".upper(), font = ("Roboto", 14), width = 200, fg_color = "#202020", hover_color = "Gray", corner_radius = 5, command = self.novo_agendamento)
+        self.cadastrar_agendamento_entry.place(x=100, y=15)
+
+        self.agendamentos_ativos_entry = ctk.CTkButton(self.agendamentos_frame, text= "Agendamentos Ativos".upper(), font = ("Roboto", 14), width = 200, fg_color = "#202020", hover_color = "Gray", corner_radius = 5, command = self.agendamentos_ativos)
+        self.agendamentos_ativos_entry.place(x=320, y=15)       
+
+    def novo_agendamento(self):
+
+        self.registro_agendamento = ctk.CTkFrame(self, width=610, height=415)
+        self.registro_agendamento.place(x=270, y= 80)
+
+        self.novo_agendamento_frame = ctk.CTkLabel(self.registro_agendamento, text= "".upper(), font = ("Roboto", 18))
+        self.novo_agendamento_frame.place(x=240, y=25)
+
+        self.span2 = ctk.CTkLabel(self.registro_agendamento, text= "click na lupa e escolha uma opção".upper(), font = ("Roboto", 11))
+        self.span2.place(x=210, y=60)
+        
         pacientesCadastrados = self.DbAccess.GetPacientes()
+        
+        search_image = ctk.CTkImage( dark_image=Imagemtesteiuri.open("Resources/Images/lupa.png") )
+    
+        buscar_cpf_paciente = ctk.CTkButton( self.registro_agendamento, width=5, corner_radius=10, image=search_image, text='', fg_color="#2b2b2b", hover_color = "#202020", command= self.lupa_cpf_paciente)
+        buscar_cpf_paciente.place(x=508, y=100)
 
-        pacientes = ctk.CTkComboBox(self.agendamentos_frame, values=pacientesCadastrados, hover=True, variable="pacienteEscolhido")
-        pacientes.place( x=0, y=0 )
+        buscar_remedio = ctk.CTkButton( self.registro_agendamento, width=5, corner_radius=10, image=search_image, text='', fg_color="#2b2b2b", hover_color = "#202020", command= self.lupa_remedios )
+        buscar_remedio.place(x=508, y=190)
 
+        self.cpf = ctk.CTkEntry( self.registro_agendamento, placeholder_text= "CPF", width=160, font=("Roboto", 14), corner_radius=15)
+        self.cpf.configure(state="disabled")
+        self.cpf.place( x=105, y=100 )
+        
+        self.nome_paciente = ctk.CTkEntry( self.registro_agendamento, placeholder_text= "PACIENTE", width=230, font=("Roboto", 14), corner_radius=15)
+        self.nome_paciente.configure(state="disabled")
+        self.nome_paciente.place( x=275, y=100 )
+
+        self.span3 = ctk.CTkLabel(self.registro_agendamento, text= "digite o horario".upper(), font = ("Roboto", 11))
+        self.span3.place(x=140, y=160)
+
+        horario_remedio = ctk.CTkEntry( self.registro_agendamento, placeholder_text= "HORARIO", width=160, font=("Roboto", 14), corner_radius=15)
+        horario_remedio.place( x=105, y=190 )
+
+        self.span4 = ctk.CTkLabel(self.registro_agendamento, text= "click na lupa e escolha uma opção".upper(), font = ("Roboto", 11))
+        self.span4.place(x=285, y=160)
+
+        self.remedio = ctk.CTkEntry( self.registro_agendamento, placeholder_text= "MEDICAMENTO", width=230, font=("Roboto", 14), corner_radius=15)
+        self.remedio.configure(state="disabled")
+        self.remedio.place( x=275, y=190 )
+
+        self.agen_button_paciente = ctk.CTkButton(self.registro_agendamento, width = 250, text = "confirmar agendamento".upper(), fg_color = "Green", hover_color = "#014B05", corner_radius = 15)
+        self.agen_button_paciente.place(x=185, y=250)
+
+    def delet_agendamento(self):
+
+        self.delet_agendamento_frame = ctk.CTkFrame(self, width=610, height=415)
+        self.delet_agendamento_frame.place(x=270, y= 80)
+
+        self.span3 = ctk.CTkLabel(self.delet_agendamento_frame, text= "Por favor digite o cpf".upper(), font = ("Roboto", 12))
+        self.span3.place(x=240, y=60)
+            
+        self.deletar_agendamento = ctk.CTkEntry(self.delet_agendamento_frame, width=400, placeholder_text = "CPF".upper(), corner_radius = 15)
+        self.deletar_agendamento.place(x=110, y=100)
+
+        self.delet_button_agendamento = ctk.CTkButton(self.delet_agendamento_frame, width = 250, text = "deletar agendamento".upper(), fg_color = "Green", hover_color = "#014B05", corner_radius = 15)
+        self.delet_button_agendamento.place(x=185, y=160)  
+
+    def selecionar_cpf_paciente(self):
+        
+        item_selecionado = self.cpf_paciente.selection()
+        if item_selecionado:
+            valores = self.cpf_paciente.item(item_selecionado, 'values')
+            # Preenchendo os campos CTkEntry com os valores correspondentes
+            self.cpf.configure(state="normal")
+            self.cpf.delete(0, ctk.END)
+            self.cpf.insert(0, valores[0])
+            self.cpf.configure(state="disabled")
+            
+            self.nome_paciente.configure(state="normal")
+            self.nome_paciente.delete(0, ctk.END)
+            self.nome_paciente.insert(0, valores[1])
+            self.nome_paciente.configure(state="disabled")
+        
+        self.cpf_paciente_frame.destroy()
+
+    def lupa_cpf_paciente(self):
+
+        self.cpf_paciente_frame = ctk.CTkFrame(self, width=610, height=415)
+        self.cpf_paciente_frame.place(x=270, y= 80)
+
+        style = ttk.Style()
+        style.theme_use("default")
+        style.configure("Custom.Treeview", 
+                background="#202020",  # Cor de fundo
+                foreground="white",    # Cor do texto
+                rowheight=25,          # Altura das linhas
+                fieldbackground="#202020")  # Cor de fundo do campo
+                
+        self.cpf_paciente = ttk.Treeview(self.cpf_paciente_frame, columns=("cpf", "paciente"), show="headings", style="Custom.Treeview")
+        self.cpf_paciente.pack(fill="both", expand=True)
+
+        # Definir os cabeçalhos das colunas
+        self.cpf_paciente.heading("cpf", text="CPF")
+        self.cpf_paciente.heading("paciente", text="Paciente")
+        
+        # Definir o tamanho das colunas
+        self.cpf_paciente.column("cpf", anchor="center", width=250)
+        self.cpf_paciente.column("paciente", anchor="center", width=358)
+        
+        # Adicionar dados à tabela
+        dados = [
+        (24234567888, "Alice"),
+        (12345678900, "Bruno"),
+        (55577788834, "Joao"),
+        ]
+        for pessoas in dados:
+            self.cpf_paciente.insert("", "end", values=pessoas)  
+
+        select_cpf_paciente = ctk.CTkButton(self.cpf_paciente_frame, text = "CONFIRMAR".upper(), fg_color = "Green", hover_color = "#014B05", corner_radius = 15, command= self.selecionar_cpf_paciente)
+        select_cpf_paciente.pack()  
+        
+    def lupa_remedios(self):
+
+        self.remedio_frame = ctk.CTkFrame(self, width=610, height=415)
+        self.remedio_frame.place(x=270, y= 80)
+
+        style = ttk.Style()
+        style.theme_use("default")
+        style.configure("Custom.Treeview", 
+                background="#202020",  # Cor de fundo
+                foreground="white",    # Cor do texto
+                rowheight=25,          # Altura das linhas
+                fieldbackground="#202020")  # Cor de fundo do campo
+                
+        self.remedio_paciente = ttk.Treeview(self.remedio_frame, columns=("remedio"), show="headings", style="Custom.Treeview")
+        self.remedio_paciente.pack(fill="both", expand=True)
+
+        # Definir os cabeçalhos das colunas
+        self.remedio_paciente.heading("remedio", text="REMEDIO")
+        
+        # Definir o tamanho das colunas
+        self.remedio_paciente.column("remedio", anchor="center", width=608)
+        
+        
+        # Adicionar dados à tabela
+        dados = [
+        ("tylenol"),
+        ("ibruprofeno"),
+        ("paracetamol"),
+        ]
+        for pessoas in dados:
+            self.remedio_paciente.insert("", "end", values=pessoas)  
+
+        select_remedio_paciente = ctk.CTkButton(self.remedio_frame, text = "CONFIRMAR".upper(), fg_color = "Green", hover_color = "#014B05", corner_radius = 15, command= self.selecionar_remedio)
+        select_remedio_paciente.pack() 
+
+    def selecionar_remedio(self):
+
+        item_selecionado = self.remedio_paciente.selection()
+        if item_selecionado:
+            valores = self.remedio_paciente.item(item_selecionado, 'values')
+            
+            self.remedio.configure(state="normal")
+            self.remedio.delete(0, ctk.END)
+            self.remedio.insert(0, valores[0])
+            self.remedio.configure(state="disabled")
+        
+        self.remedio_frame.destroy()
+
+    def agendamentos_ativos(self):
+
+        self.registro_agendamento.place_forget()
+
+        self.agendamento_ativo_frame = ctk.CTkFrame(self, width=610, height=415)
+        self.agendamento_ativo_frame.place(x=270, y= 80)
+        
+        style = ttk.Style()
+        style.theme_use("default")
+        style.configure("Custom.Treeview", 
+                background="#202020",  # Cor de fundo
+                foreground="white",    # Cor do texto
+                rowheight=25,          # Altura das linhas
+                fieldbackground="#202020")  # Cor de fundo do campo
+                
+        self.agendamento_at = ttk.Treeview(self.agendamento_ativo_frame, columns=("cpf", "nome", "medicamento", "horario"), show="headings", style="Custom.Treeview")
+        self.agendamento_at.pack(fill="both", expand=True)
+
+        # Definir os cabeçalhos das colunas
+        self.agendamento_at.heading("cpf", text="CPF")
+        self.agendamento_at.heading("nome", text="Nome")
+        self.agendamento_at.heading("medicamento", text="Medicamento")
+        self.agendamento_at.heading("horario", text="Horario")
+        
+        # Definir o tamanho das colunas
+        self.agendamento_at.column("cpf", anchor="center", width=150)
+        self.agendamento_at.column("nome", anchor="center", width=154)
+        self.agendamento_at.column("medicamento", anchor="center", width=154)
+        self.agendamento_at.column("horario", anchor="center", width=150)
+        
+        # Adicionar dados à tabela
+        dados = [
+        (24234567888, "Alice", "tylenol", "09:00"),
+        (12345678900, "Bruno", "paracetamol", "12:00"),
+        (55577788834, "Joao", "ibrupofeno", "14:30"),
+        (22245637899, "Maria", "rivotril", "16:00"),
+        ]
+        for cpf, nome, medicamento, horario in dados:
+            self.agendamento_at.insert("", "end", values=(cpf, nome, medicamento, horario, "Excluir"))
+
+        delet_agendamento_ativo = ctk.CTkButton(self.agendamento_ativo_frame, text = "deletar agendamento selecionado".upper(), fg_color = "Green", hover_color = "#014B05", corner_radius = 15, command= self.excluir_agendamento)
+        delet_agendamento_ativo.pack()    
+
+    def excluir_agendamento(self):
+
+        selected_item = self.agendamento_at.selection()  # Seleciona o item
+        if selected_item:  # Verifica se há um item selecionado
+            self.agendamento_at.delete(selected_item)  # Exclui o item    
         
 
          
