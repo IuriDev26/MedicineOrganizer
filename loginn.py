@@ -12,7 +12,7 @@ class App(ctk.CTk):
         super().__init__()
         self.tema()
         self.tela()
-        self.tela_login() 
+        self.tela_login()
         self.DbAccess = DbAccess()
         #self.backend.cria_tabela()
 
@@ -155,17 +155,15 @@ class App(ctk.CTk):
 
         usuario = self.nome_entry.get()
         senha   = self.senha_entry.get()
-        
-        acesso = []
-        acesso.append(usuario)
-        acesso.append(senha)
-        LoginSucesso = self.DbAccess.CriarLogin(acesso)
+
+        acesso = [usuario, senha ]
+        LoginSucesso, cpf = self.DbAccess.CriarLogin(acesso)
 
 
         if LoginSucesso:
 
             self.destroy()
-            TelaPrincipal = App_pt2(usuario)
+            TelaPrincipal = App_pt2(usuario, cpf)
             TelaPrincipal.mainloop()
 
         else:
@@ -177,8 +175,9 @@ class App(ctk.CTk):
         usuario = self.novo_usuario.get()
         senha   = int(self.nova_senha.get())
         cpf     = self.novo_cpf.get()
+        nome    = self.novo_usuario.get()
 
-        DadosUsuario = [ usuario, senha, cpf ]
+        DadosUsuario = [ usuario, senha, cpf, nome ]
 
         UsuarioCriado = self.DbAccess.CriarUsuario(DadosUsuario)
 
